@@ -16,10 +16,13 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
 }
 
 dependencies {
     compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
+
+    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     //annotations processor
     compileOnly 'org.projectlombok:lombok:1.18.30'
