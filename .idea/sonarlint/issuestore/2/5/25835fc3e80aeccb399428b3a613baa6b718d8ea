@@ -1,16 +1,12 @@
 
 U
-java:S1874€"2Remove this use of "getDyeData"; it is deprecated.(ç€€úıÿÿÿÿ8–‡Ìé­1
+java:S1874ü"2Remove this use of "getDyeData"; it is deprecated.(ç€€úıÿÿÿÿ8Ô²›™®1
 Q
-java:S1874†"3Remove this use of "getWoolData"; it is deprecated.(†ıö8š‡Ìé­1
+java:S1874‚"3Remove this use of "getWoolData"; it is deprecated.(†ıö8Ù²›™®1
 J
-java:S3011",This accessibility update should be removed.(ªÇµ”8§‡Ìé­1
+java:S3011š",This accessibility update should be removed.(ªÇµ”8ú²›™®1
 O
-java:S3011Ÿ",This accessibility bypass should be removed.(ùÁúáøÿÿÿÿ8ª‡Ìé­1
-K	java:S108 ")Either remove or fill this block of code.(µèÁæıÿÿÿÿ8¬‡Ìé­1
-Y
-java:S2696ª"6Make the enclosing method "static" or remove this set.(œöÆÿÿÿÿÿ8Ş”àé­1
-X
-java:S2209ª"5Change this instance-reference to a static reference.(œöÆÿÿÿÿÿ8â”àé­1
+java:S3011›",This accessibility bypass should be removed.(ùÁúáøÿÿÿÿ8û²›™®1
+K	java:S108œ")Either remove or fill this block of code.(µèÁæıÿÿÿÿ8†³›™®1
 W
-java:S1068 ":Remove this unused "itemClickEventConsumer" private field.(ˆ¶ÿ»8ÊàËé­1
+java:S1068":Remove this unused "itemClickEventConsumer" private field.(ˆ¶ÿ»8•³›™®1

@@ -1,0 +1,4 @@
+database:
+  jdbcUrl: "jdbc:mysql://localhost:3306/meu_banco_de_dados"
+  username: "meu_usuario"
+  password: "minha_senha"
