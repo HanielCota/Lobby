@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import com.hanielfialho.lobby.manager.player.PlayerNumberManager;
-import com.hanielfialho.lobby.utils.PhoneNumberValidator;
+import com.hanielfialho.lobby.utils.validations.PhoneNumberValidator;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
@@ -24,17 +24,20 @@ public class PhoneNumberCommand extends BaseCommand {
         numberManager.getPhoneNumberForPlayerAsync(playerName)
                 .thenAccept(phoneNumber -> {
                     if (phoneNumber != null) {
-                        player.sendMessage("§aSeu número de celular é: " + phoneNumber);
+
+                        String formattedPhoneNumber = "(" + phoneNumber.substring(0, 2) + ") " + phoneNumber.substring(2);
+
+                        player.sendMessage("§aSeu número de celular é: " + formattedPhoneNumber);
                         return;
                     }
 
                     if (args.length < 1) {
 
-                        player.sendMessage(new String[]{
-                                "",
-                                "§cVocê não possui número de celular cadastrado.",
-                                "§cUse /celular <número> para cadastrar seu número.",
-                                ""
+                        player.sendMessage(new String[] {
+                            "",
+                            "§cVocê não possui número de celular cadastrado.",
+                            "§cUse /celular <número> para cadastrar seu número.",
+                            ""
                         });
                         return;
                     }

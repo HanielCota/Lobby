@@ -1,4 +1,4 @@
-package com.hanielfialho.lobby.utils;
+package com.hanielfialho.lobby.utils.validations;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

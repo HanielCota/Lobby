@@ -1,4 +1,4 @@
-package com.hanielfialho.lobby.utils;
+package com.hanielfialho.lobby.utils.validations;
 
 import java.util.Arrays;
 import java.util.List;

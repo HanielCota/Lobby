@@ -1,13 +1,15 @@
 package com.hanielfialho.lobby;
 
 import co.aikar.commands.PaperCommandManager;
-import com.hanielfialho.lobby.commands.EmailCommand;
-import com.hanielfialho.lobby.commands.PhoneNumberCommand;
+import com.hanielfialho.lobby.commands.*;
 import com.hanielfialho.lobby.database.DatabaseManager;
 import com.hanielfialho.lobby.database.DatabaseTableCreator;
 import com.hanielfialho.lobby.listeners.ListenerRegistry;
+import com.hanielfialho.lobby.manager.discord.DiscordDatabaseManager;
 import com.hanielfialho.lobby.manager.email.EmailDatabaseManager;
+import com.hanielfialho.lobby.manager.instagram.InstagramDatabaseManager;
 import com.hanielfialho.lobby.manager.player.PlayerNumberManager;
+import com.hanielfialho.lobby.manager.twitter.TwitterDatabaseManager;
 import com.hanielfialho.lobby.utils.ConfigUtils;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +23,9 @@ public final class LobbyPlugin extends JavaPlugin {
     private ListenerRegistry listenerRegistry;
     private EmailDatabaseManager emailDatabaseManager;
     private PlayerNumberManager playerNumberManager;
+    private TwitterDatabaseManager twitterDatabaseManager;
+    private InstagramDatabaseManager instagramDatabaseManager;
+    private DiscordDatabaseManager discordDatabaseManager;
 
     @Override
     public void onEnable() {
@@ -28,6 +33,9 @@ public final class LobbyPlugin extends JavaPlugin {
         createTables();
         initializeEmailManager();
         initializePlayerNumberManager();
+        initializeTwitterManager();
+        initializeInstagramManager();
+        intializeDiscordManager();
         initializeCommands();
         initializeListeners();
     }
@@ -52,8 +60,21 @@ public final class LobbyPlugin extends JavaPlugin {
     private void initializeEmailManager() {
         emailDatabaseManager = new EmailDatabaseManager(this);
     }
+
     private void initializePlayerNumberManager() {
         playerNumberManager = new PlayerNumberManager(this);
+    }
+
+    private void initializeTwitterManager() {
+        twitterDatabaseManager = new TwitterDatabaseManager(this);
+    }
+
+    private void initializeInstagramManager() {
+        instagramDatabaseManager = new InstagramDatabaseManager(this);
+    }
+
+    private void intializeDiscordManager() {
+        discordDatabaseManager = new DiscordDatabaseManager(this);
     }
 
     private void initializeCommands() {
@@ -68,6 +89,9 @@ public final class LobbyPlugin extends JavaPlugin {
     private void registerCommands(PaperCommandManager commandManager) {
         commandManager.registerCommand(new EmailCommand(emailDatabaseManager));
         commandManager.registerCommand(new PhoneNumberCommand(playerNumberManager));
+        commandManager.registerCommand(new TwitterCommand(twitterDatabaseManager));
+        commandManager.registerCommand(new InstagramCommand(instagramDatabaseManager));
+        commandManager.registerCommand(new DiscordCommand(discordDatabaseManager));
     }
 
     private void createTables() {

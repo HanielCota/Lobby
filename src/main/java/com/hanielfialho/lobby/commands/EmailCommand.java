@@ -6,7 +6,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import com.hanielfialho.lobby.manager.email.EmailDatabaseManager;
 import com.hanielfialho.lobby.utils.ClickMessage;
-import com.hanielfialho.lobby.utils.EmailValidator;
+import com.hanielfialho.lobby.utils.validations.EmailValidator;
 import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import org.bukkit.Sound;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.hanielfialho.lobby.utils.EmailValidator.isValidEmail;
+import static com.hanielfialho.lobby.utils.validations.EmailValidator.isValidEmail;
 
 @CommandAlias("email")
 @AllArgsConstructor
@@ -27,36 +27,35 @@ public class EmailCommand extends BaseCommand {
 
     @Default
     private void onEmailCommand(Player player, String[] args) {
-        if (args.length < 1) {
-
-            player.sendMessage("");
-            player.sendMessage("§cUso correto: /email <email> para cadastrar um de seus emails.");
-
-            new ClickMessage("§eClique ")
-                    .then("§e§lAQUI")
-                    .click(Action.RUN_COMMAND, "/email domain")
-                    .then("§e para visualizar a lista de emails aceitos.")
-                    .send(player);
-
-            player.sendMessage("");
-            return;
-        }
-
-        String email = args[0];
         String playerName = player.getName();
 
         emailManager.getEmailForPlayerAsync(playerName).thenAccept(existingEmail -> {
             if (existingEmail != null) {
-                player.sendMessage("§cVocê já tem um e-mail definido: " + existingEmail);
+                player.sendMessage("§aSeu e-mail cadastrado é: " + existingEmail);
                 return;
             }
+
+            if (args.length < 1) {
+                player.sendMessage("");
+                player.sendMessage("§cUse: /email <email> para cadastrar ou visualizar seu e-mail.");
+                new ClickMessage("§eClique ")
+                        .then("§e§lAQUI")
+                        .click(Action.RUN_COMMAND, "/email domain")
+                        .then("§e para visualizar a lista de emails aceitos.")
+                        .send(player);
+                player.sendMessage("");
+                return;
+            }
+
+            String email = args[0];
 
             if (!isValidEmail(email)) {
                 player.sendMessage("§cE-mail inválido. Por favor, insira um e-mail válido.");
                 return;
             }
 
-            emailManager.setEmailForPlayerAsync(playerName, email)
+            emailManager
+                    .setEmailForPlayerAsync(playerName, email)
                     .thenRun(() -> {
                         player.sendMessage("§aE-mail definido com sucesso para: " + email);
                         player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
@@ -85,6 +84,6 @@ public class EmailCommand extends BaseCommand {
         }
 
         clickMessage.send(player);
+        player.sendMessage("\n§eUtilize um desses domínios para cadastrar o seu e-mail.");
     }
-
 }

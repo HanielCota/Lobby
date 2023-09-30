@@ -132,5 +132,15 @@ o
 ?src/main/java/com/hanielfialho/lobby/commands/EmailCommand.java,b\e\be3aed05978af5a42747aef9889373e742b06bf1
 z
 Jsrc/main/java/com/hanielfialho/lobby/manager/player/PlayerDateManager.java,9\e\9ee59b18840ecc1f12e8e2967e647f8c043e99d1
-n
->src/main/java/com/hanielfialho/lobby/utils/EmailValidator.java,2\4\24198e18117fd97d6789c41500aa1123d355e6fe
+l
+<src/main/java/com/hanielfialho/lobby/utils/ClickMessage.java,d\e\dedd72140d7519eff20d1ba19bac397de347c63f
+|
+Lsrc/main/java/com/hanielfialho/lobby/manager/player/PlayerNumberManager.java,c\c\cca981967c73b08c5215a632bdace5df6972b18b
+z
+Jsrc/main/java/com/hanielfialho/lobby/utils/validations/EmailValidator.java,0\4\04cc4e905e38750032cd140601fe4ad9fee11024
+k
+;src/main/java/com/hanielfialho/lobby/utils/MessagePart.java,b\6\b6f6ee81ef08f5656578b72520a9ff26b4ecd0fa
+u
+Esrc/main/java/com/hanielfialho/lobby/commands/PhoneNumberCommand.java,c\6\c6e908f95c5dc02ecd27637c77e9e68aad4ae754
+€
+Psrc/main/java/com/hanielfialho/lobby/utils/validations/PhoneNumberValidator.java,c\6\c6e089b74c3c808661aa7181984716fc6a422c0a
