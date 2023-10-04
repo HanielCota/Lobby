@@ -3,6 +3,7 @@ package com.hanielfialho.lobby.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import com.hanielfialho.lobby.manager.twitter.TwitterDatabaseManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Sound;
@@ -45,6 +46,38 @@ public class TwitterCommand extends BaseCommand {
                     .exceptionally(e -> {
                         logger.error("Erro ao definir o usuário do Twitter do jogador", e);
                         player.sendMessage("§cErro ao definir o usuário do Twitter. Por favor, tente novamente.");
+                        return null;
+                    });
+        });
+    }
+
+    @Subcommand("delete")
+    private void onDeleteTwitterCommand(Player player, String[] args) {
+        if (args.length < 1) {
+            player.sendMessage("§cUso correto: /twitter delete <nome do jogador>");
+            return;
+        }
+
+        String targetPlayerName = args[0];
+
+        if (targetPlayerName == null || targetPlayerName.isEmpty()) {
+            player.sendMessage("§cNome de jogador inválido.");
+            return;
+        }
+
+        twitterManager.getTwitterForPlayerAsync(targetPlayerName).thenAccept(existingTwitter -> {
+            if (existingTwitter == null) {
+                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+                return;
+            }
+
+            twitterManager
+                    .deleteTwitterForPlayerAsync(targetPlayerName)
+                    .thenRun(() -> player.sendMessage("§aTwitter de " + targetPlayerName + " removido com sucesso."))
+                    .exceptionally(e -> {
+                        logger.error("Erro ao remover o Twitter de " + targetPlayerName, e);
+                        player.sendMessage(
+                                "§cErro ao remover o Twitter de " + targetPlayerName + ". Por favor, tente novamente.");
                         return null;
                     });
         });

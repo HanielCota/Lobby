@@ -86,4 +86,36 @@ public class EmailCommand extends BaseCommand {
         clickMessage.send(player);
         player.sendMessage("\n§eUtilize um desses domínios para cadastrar o seu e-mail.");
     }
+
+    @Subcommand("delete")
+    private void onDeleteEmailCommand(Player player, String[] args) {
+        if (args.length < 1) {
+            player.sendMessage("§cUso correto: /email delete <nome do jogador>");
+            return;
+        }
+
+        String targetPlayerName = args[0];
+
+        if (targetPlayerName == null || targetPlayerName.isEmpty()) {
+            player.sendMessage("§cNome de jogador inválido.");
+            return;
+        }
+
+        emailManager.getEmailForPlayerAsync(targetPlayerName).thenAccept(existingEmail -> {
+            if (existingEmail == null) {
+                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+                return;
+            }
+
+            emailManager
+                    .deleteEmailForPlayerAsync(targetPlayerName)
+                    .thenRun(() -> player.sendMessage("§aE-mail de " + targetPlayerName + " removido com sucesso."))
+                    .exceptionally(e -> {
+                        logger.error("Erro ao remover o e-mail de " + targetPlayerName, e);
+                        player.sendMessage(
+                                "§cErro ao remover o e-mail de " + targetPlayerName + ". Por favor, tente novamente.");
+                        return null;
+                    });
+        });
+    }
 }

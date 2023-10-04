@@ -51,4 +51,19 @@ public class PlayerNumberManager {
             return null;
         });
     }
+
+    public CompletableFuture<Void> deletePhoneForPlayerAsync(String playerName) {
+        return CompletableFuture.runAsync(() -> {
+            String query = "UPDATE lobby SET phone_number = NULL WHERE player_name = ?";
+
+            try (PreparedStatement statement =
+                    plugin.getDatabaseManager().getConnection().prepareStatement(query)) {
+                statement.setString(1, playerName);
+
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                log.error("Error while deleting phone for player in the database", e);
+            }
+        });
+    }
 }

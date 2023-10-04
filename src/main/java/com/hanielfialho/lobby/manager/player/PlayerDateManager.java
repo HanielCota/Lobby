@@ -2,6 +2,8 @@ package com.hanielfialho.lobby.manager.player;
 
 import com.hanielfialho.lobby.LobbyPlugin;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,15 +11,12 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @AllArgsConstructor
 public class PlayerDateManager {
 
-    private final LobbyPlugin plugin;
-
     private static final Logger logger = LoggerFactory.getLogger(PlayerDateManager.class);
+    private final LobbyPlugin plugin;
 
     public CompletableFuture<Void> setPlayerEntryDateInDatabaseAsync(String playerName) {
         return CompletableFuture.runAsync(() -> {
@@ -43,7 +42,6 @@ public class PlayerDateManager {
             });
         });
     }
-
 
     private String getCurrentDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

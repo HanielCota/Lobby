@@ -5,6 +5,7 @@ import com.hanielfialho.lobby.commands.*;
 import com.hanielfialho.lobby.database.DatabaseManager;
 import com.hanielfialho.lobby.database.DatabaseTableCreator;
 import com.hanielfialho.lobby.listeners.ListenerRegistry;
+import com.hanielfialho.lobby.manager.country.CountryDatabaseManager;
 import com.hanielfialho.lobby.manager.discord.DiscordDatabaseManager;
 import com.hanielfialho.lobby.manager.email.EmailDatabaseManager;
 import com.hanielfialho.lobby.manager.instagram.InstagramDatabaseManager;
@@ -17,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Getter
 public final class LobbyPlugin extends JavaPlugin {
 
+    // Data Managers
     private DatabaseTableCreator tableCreator;
     private ConfigUtils databaseConfig;
     private DatabaseManager databaseManager;
@@ -26,6 +28,7 @@ public final class LobbyPlugin extends JavaPlugin {
     private TwitterDatabaseManager twitterDatabaseManager;
     private InstagramDatabaseManager instagramDatabaseManager;
     private DiscordDatabaseManager discordDatabaseManager;
+    private CountryDatabaseManager countryDatabaseManager;
 
     @Override
     public void onEnable() {
@@ -35,7 +38,8 @@ public final class LobbyPlugin extends JavaPlugin {
         initializePlayerNumberManager();
         initializeTwitterManager();
         initializeInstagramManager();
-        intializeDiscordManager();
+        initializeDiscordManager();
+        initializeCountyManager();
         initializeCommands();
         initializeListeners();
     }
@@ -73,8 +77,12 @@ public final class LobbyPlugin extends JavaPlugin {
         instagramDatabaseManager = new InstagramDatabaseManager(this);
     }
 
-    private void intializeDiscordManager() {
+    private void initializeDiscordManager() {
         discordDatabaseManager = new DiscordDatabaseManager(this);
+    }
+
+    private void initializeCountyManager() {
+        countryDatabaseManager = new CountryDatabaseManager(this);
     }
 
     private void initializeCommands() {
@@ -92,6 +100,7 @@ public final class LobbyPlugin extends JavaPlugin {
         commandManager.registerCommand(new TwitterCommand(twitterDatabaseManager));
         commandManager.registerCommand(new InstagramCommand(instagramDatabaseManager));
         commandManager.registerCommand(new DiscordCommand(discordDatabaseManager));
+        commandManager.registerCommand(new CountryCommand(countryDatabaseManager));
     }
 
     private void createTables() {

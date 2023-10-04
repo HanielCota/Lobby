@@ -13,12 +13,9 @@ public class PhoneNumberValidator {
             "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85",
             "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99");
 
-
     public boolean isValidPhoneNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile("^(" + String.join("|", validDDDs) + ")\\d{9}$");
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
     }
-
-
 }

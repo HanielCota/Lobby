@@ -25,8 +25,8 @@ dependencies {
     //api for minecraft
     compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
 
-    implementation 'org.postgresql:postgresql:42.6.0'
-
+    //caffeine cache
+    implementation "com.github.ben-manes.caffeine:caffeine:3.1.8"
 
     //connection-pool
     implementation 'com.zaxxer:HikariCP:5.0.1'

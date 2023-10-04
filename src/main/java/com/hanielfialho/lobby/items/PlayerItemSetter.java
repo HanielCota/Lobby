@@ -1,5 +1,6 @@
 package com.hanielfialho.lobby.items;
 
+import com.hanielfialho.lobby.items.ItemFactory;
 import com.hanielfialho.lobby.items.factories.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -17,4 +17,5 @@ public class PlayerItemSetupListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         PlayerItemSetter.setInitialItems(event.getPlayer());
     }
+
 }
