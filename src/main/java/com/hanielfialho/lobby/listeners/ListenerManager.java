@@ -30,5 +30,6 @@ public final class ListenerManager<T extends Listener> {
         }
 
         listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, plugin));
+
     }
 }

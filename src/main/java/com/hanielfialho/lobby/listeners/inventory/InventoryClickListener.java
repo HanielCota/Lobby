@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryClickListener implements Listener {
-
     private final Map<Material, ItemAction> itemActions = new HashMap<>();
 
     public InventoryClickListener() {

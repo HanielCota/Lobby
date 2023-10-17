@@ -22,33 +22,25 @@ public class TwitterCommand extends BaseCommand {
     private void onTwitterCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        twitterManager.getTwitterForPlayerAsync(playerName).thenAccept(existingTwitter -> {
-            if (existingTwitter != null) {
-                player.sendMessage("§aSeu usuário do Twitter cadastrado é: @" + existingTwitter);
-                return;
-            }
+        String existingTwitter = twitterManager.getTwitterForPlayer(playerName);
+        if (existingTwitter != null) {
+            player.sendMessage("§aSeu usuário do Twitter cadastrado é: @" + existingTwitter);
+            return;
+        }
 
-            if (args.length < 1) {
-                player.sendMessage("");
-                player.sendMessage("§cUse: /twitter <usuário> para cadastrar ou visualizar seu usuário do Twitter.");
-                player.sendMessage("");
-                return;
-            }
+        if (args.length < 1) {
+            player.sendMessage("");
+            player.sendMessage("§cUse: /twitter <usuário> para cadastrar ou visualizar seu usuário do Twitter.");
+            player.sendMessage("");
+            return;
+        }
 
-            String twitterUsername = args[0];
+        String twitterUsername = args[0];
 
-            twitterManager
-                    .setTwitterForPlayerAsync(playerName, twitterUsername)
-                    .thenRun(() -> {
-                        player.sendMessage("§aUsuário do Twitter definido com sucesso: @" + twitterUsername);
-                        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
-                    })
-                    .exceptionally(e -> {
-                        logger.error("Erro ao definir o usuário do Twitter do jogador", e);
-                        player.sendMessage("§cErro ao definir o usuário do Twitter. Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        twitterManager.setTwitterForPlayer(playerName, twitterUsername);
+
+        player.sendMessage("§aUsuário do Twitter definido com sucesso: @" + twitterUsername);
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("delete")
@@ -65,21 +57,14 @@ public class TwitterCommand extends BaseCommand {
             return;
         }
 
-        twitterManager.getTwitterForPlayerAsync(targetPlayerName).thenAccept(existingTwitter -> {
-            if (existingTwitter == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingTwitter = twitterManager.getTwitterForPlayer(targetPlayerName);
+        if (existingTwitter == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            twitterManager
-                    .deleteTwitterForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage("§aTwitter de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o Twitter de " + targetPlayerName, e);
-                        player.sendMessage(
-                                "§cErro ao remover o Twitter de " + targetPlayerName + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        twitterManager.deleteTwitterForPlayer(targetPlayerName);
+
+        player.sendMessage("§aTwitter de " + targetPlayerName + " removido com sucesso.");
     }
 }

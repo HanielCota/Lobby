@@ -12,21 +12,18 @@ import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
-
-@CommandAlias("country|pais")
 @AllArgsConstructor
+@CommandAlias("country|pais")
 public class CountryCommand extends BaseCommand {
 
     private final CountryDatabaseManager countryManager;
     private final Logger logger = LoggerFactory.getLogger(CountryCommand.class);
 
     @Default
-    private void onCountryCommand(Player player, String[] args) throws ExecutionException, InterruptedException {
+    private void onCountryCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        String existingCountry =
-                countryManager.getCountryForPlayerAsync(playerName).get();
+        String existingCountry = countryManager.getCountryForPlayer(playerName);
         if (existingCountry != null) {
             player.sendMessage("§aSeu país cadastrado é: " + capitalizeFirstLetter(existingCountry));
             return;
@@ -41,17 +38,10 @@ public class CountryCommand extends BaseCommand {
 
         String country = args[0];
 
-        countryManager
-                .setCountryForPlayerAsync(playerName, country)
-                .thenRun(() -> {
-                    player.sendMessage("§aPaís definido com sucesso: " + capitalizeFirstLetter(country));
-                    player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
-                })
-                .exceptionally(e -> {
-                    logger.error("Erro ao definir o país do jogador", e);
-                    player.sendMessage("§cErro ao definir o país. Por favor, tente novamente.");
-                    return null;
-                });
+        countryManager.setCountryForPlayer(playerName, country);
+
+        player.sendMessage("§aPaís definido com sucesso: " + capitalizeFirstLetter(country));
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("delete")
@@ -69,22 +59,15 @@ public class CountryCommand extends BaseCommand {
             return;
         }
 
-        countryManager.getCountryForPlayerAsync(targetPlayerName).thenAccept(existingCountry -> {
-            if (existingCountry == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingCountry = countryManager.getCountryForPlayer(targetPlayerName);
+        if (existingCountry == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            countryManager
-                    .deleteCountryForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage("§aPaís de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o país de " + targetPlayerName, e);
-                        player.sendMessage(
-                                "§cErro ao remover o país de " + targetPlayerName + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        countryManager.deleteCountryForPlayer(targetPlayerName);
+
+        player.sendMessage("§aPaís de " + targetPlayerName + " removido com sucesso.");
     }
 
     private String capitalizeFirstLetter(String input) {

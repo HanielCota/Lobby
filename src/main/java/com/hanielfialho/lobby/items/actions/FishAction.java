@@ -6,6 +6,6 @@ import org.bukkit.entity.Player;
 public class FishAction implements ItemAction {
     @Override
     public void execute(Player player) {
-        player.sendMessage("Você clicou em um Peixe-BolaGato");
+        player.performCommand("gadgetsmenu main");
     }
 }

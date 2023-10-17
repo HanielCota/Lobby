@@ -22,33 +22,25 @@ public class DiscordCommand extends BaseCommand {
     private void onDiscordCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        discordManager.getDiscordForPlayerAsync(playerName).thenAccept(existingDiscord -> {
-            if (existingDiscord != null) {
-                player.sendMessage("§aSeu usuário do Discord cadastrado é: " + existingDiscord);
-                return;
-            }
+        String existingDiscord = discordManager.getDiscordForPlayer(playerName);
+        if (existingDiscord != null) {
+            player.sendMessage("§aSeu usuário do Discord cadastrado é: " + existingDiscord);
+            return;
+        }
 
-            if (args.length < 1) {
-                player.sendMessage("");
-                player.sendMessage("§cUse: /discord <usuário> para cadastrar ou visualizar seu usuário do Discord.");
-                player.sendMessage("");
-                return;
-            }
+        if (args.length < 1) {
+            player.sendMessage("");
+            player.sendMessage("§cUse: /discord <usuário> para cadastrar ou visualizar seu usuário do Discord.");
+            player.sendMessage("");
+            return;
+        }
 
-            String discordUsername = args[0];
+        String discordUsername = args[0];
 
-            discordManager
-                    .setDiscordForPlayerAsync(playerName, discordUsername)
-                    .thenRun(() -> {
-                        player.sendMessage("§aUsuário do Discord definido com sucesso: " + discordUsername);
-                        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
-                    })
-                    .exceptionally(e -> {
-                        logger.error("Erro ao definir o usuário do Discord do jogador", e);
-                        player.sendMessage("§cErro ao definir o usuário do Discord. Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        discordManager.setDiscordForPlayer(playerName, discordUsername);
+
+        player.sendMessage("§aUsuário do Discord definido com sucesso: " + discordUsername);
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("delete")
@@ -65,22 +57,14 @@ public class DiscordCommand extends BaseCommand {
             return;
         }
 
-        discordManager.getDiscordForPlayerAsync(targetPlayerName).thenAccept(existingDiscord -> {
-            if (existingDiscord == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingDiscord = discordManager.getDiscordForPlayer(targetPlayerName);
+        if (existingDiscord == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            discordManager
-                    .deleteDiscordForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage(
-                            "§aUsuário do Discord de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o usuário do Discord de " + targetPlayerName, e);
-                        player.sendMessage("§cErro ao remover o usuário do Discord de " + targetPlayerName
-                                + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        discordManager.deleteDiscordForPlayer(targetPlayerName);
+
+        player.sendMessage("§aUsuário do Discord de " + targetPlayerName + " removido com sucesso.");
     }
 }

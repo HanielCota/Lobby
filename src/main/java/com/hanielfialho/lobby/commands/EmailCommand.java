@@ -29,43 +29,35 @@ public class EmailCommand extends BaseCommand {
     private void onEmailCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        emailManager.getEmailForPlayerAsync(playerName).thenAccept(existingEmail -> {
-            if (existingEmail != null) {
-                player.sendMessage("§aSeu e-mail cadastrado é: " + existingEmail);
-                return;
-            }
+        String existingEmail = emailManager.getEmailForPlayer(playerName);
+        if (existingEmail != null) {
+            player.sendMessage("§aSeu e-mail cadastrado é: " + existingEmail);
+            return;
+        }
 
-            if (args.length < 1) {
-                player.sendMessage("");
-                player.sendMessage("§cUse: /email <email> para cadastrar ou visualizar seu e-mail.");
-                new ClickMessage("§eClique ")
-                        .then("§e§lAQUI")
-                        .click(Action.RUN_COMMAND, "/email domain")
-                        .then("§e para visualizar a lista de emails aceitos.")
-                        .send(player);
-                player.sendMessage("");
-                return;
-            }
+        if (args.length < 1) {
+            player.sendMessage("");
+            player.sendMessage("§cUse: /email <email> para cadastrar ou visualizar seu e-mail.");
+            new ClickMessage("§eClique ")
+                    .then("§e§lAQUI")
+                    .click(Action.RUN_COMMAND, "/email domain")
+                    .then("§e para visualizar a lista de emails aceitos.")
+                    .send(player);
+            player.sendMessage("");
+            return;
+        }
 
-            String email = args[0];
+        String email = args[0];
 
-            if (!isValidEmail(email)) {
-                player.sendMessage("§cE-mail inválido. Por favor, insira um e-mail válido.");
-                return;
-            }
+        if (!isValidEmail(email)) {
+            player.sendMessage("§cE-mail inválido. Por favor, insira um e-mail válido.");
+            return;
+        }
 
-            emailManager
-                    .setEmailForPlayerAsync(playerName, email)
-                    .thenRun(() -> {
-                        player.sendMessage("§aE-mail definido com sucesso para: " + email);
-                        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
-                    })
-                    .exceptionally(e -> {
-                        logger.error("Erro ao definir o e-mail do jogador", e);
-                        player.sendMessage("§cErro ao definir o e-mail. Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        emailManager.setEmailForPlayer(playerName, email);
+
+        player.sendMessage("§aE-mail definido com sucesso para: " + email);
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("domain")
@@ -101,21 +93,14 @@ public class EmailCommand extends BaseCommand {
             return;
         }
 
-        emailManager.getEmailForPlayerAsync(targetPlayerName).thenAccept(existingEmail -> {
-            if (existingEmail == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingEmail = emailManager.getEmailForPlayer(targetPlayerName);
+        if (existingEmail == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            emailManager
-                    .deleteEmailForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage("§aE-mail de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o e-mail de " + targetPlayerName, e);
-                        player.sendMessage(
-                                "§cErro ao remover o e-mail de " + targetPlayerName + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        emailManager.deleteEmailForPlayer(targetPlayerName);
+
+        player.sendMessage("§aE-mail de " + targetPlayerName + " removido com sucesso.");
     }
 }

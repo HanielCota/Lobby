@@ -22,59 +22,40 @@ public class PhoneNumberCommand extends BaseCommand {
     private void onPhoneNumberCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        numberManager
-                .getPhoneNumberForPlayerAsync(playerName)
-                .thenAccept(phoneNumber -> {
-                    if (phoneNumber != null) {
+        String phoneNumber = numberManager.getPhoneNumberForPlayer(playerName);
+        if (phoneNumber != null) {
+            String formattedPhoneNumber = "(" + phoneNumber.substring(0, 2) + ") " + phoneNumber.substring(2);
+            player.sendMessage("§aSeu número de celular é: " + formattedPhoneNumber);
+            return;
+        }
 
-                        String formattedPhoneNumber =
-                                "(" + phoneNumber.substring(0, 2) + ") " + phoneNumber.substring(2);
+        if (args.length < 1) {
+            player.sendMessage("");
+            player.sendMessage("§cVocê não possui número de celular cadastrado.");
+            player.sendMessage("§cUse /celular <número> para cadastrar seu número.");
+            player.sendMessage("");
+            return;
+        }
 
-                        player.sendMessage("§aSeu número de celular é: " + formattedPhoneNumber);
-                        return;
-                    }
+        String newPhoneNumber = args[0];
+        PhoneNumberValidator validator = new PhoneNumberValidator();
 
-                    if (args.length < 1) {
+        if (!validator.isValidPhoneNumber(newPhoneNumber)) {
+            player.sendMessage("§cNúmero de celular inválido.");
+            player.sendMessage("§cCertifique-se de inserir um número válido com DDD brasileiro.");
+            player.sendMessage("");
+            player.sendMessage("§cLembre-se que são 9 dígitos geralmente.");
+            return;
+        }
 
-                        player.sendMessage(new String[] {
-                            "",
-                            "§cVocê não possui número de celular cadastrado.",
-                            "§cUse /celular <número> para cadastrar seu número.",
-                            ""
-                        });
-                        return;
-                    }
-
-                    String newPhoneNumber = args[0];
-                    PhoneNumberValidator validator = new PhoneNumberValidator();
-
-                    if (!validator.isValidPhoneNumber(newPhoneNumber)) {
-                        player.sendMessage("§cNúmero de celular inválido.");
-                        player.sendMessage("§cCertifique-se de inserir um número válido com DDD brasileiro.");
-                        player.sendMessage("");
-                        player.sendMessage("§cLembre-se que são 9 dígitos geralmente.");
-                        return;
-                    }
-
-                    numberManager
-                            .setPhoneNumberForPlayerAsync(playerName, newPhoneNumber)
-                            .thenAccept(result ->
-                                    player.sendMessage("§aNúmero de celular definido com sucesso: " + newPhoneNumber))
-                            .exceptionally(e -> {
-                                logger.error("Erro ao definir número de celular do jogador", e);
-                                return null;
-                            });
-                })
-                .exceptionally(e -> {
-                    logger.error("Erro ao obter número de celular do jogador", e);
-                    return null;
-                });
+        numberManager.setPhoneNumberForPlayer(playerName, newPhoneNumber);
+        player.sendMessage("§aNúmero de celular definido com sucesso: " + newPhoneNumber);
     }
 
     @Subcommand("delete")
     private void onDeletePhoneCommand(Player player, String[] args) {
         if (args.length < 1) {
-            player.sendMessage("§cUso correto: /phone delete <nome do jogador>");
+            player.sendMessage("§cUso correto: /celular delete <nome do jogador>");
             return;
         }
 
@@ -85,21 +66,13 @@ public class PhoneNumberCommand extends BaseCommand {
             return;
         }
 
-        numberManager.getPhoneNumberForPlayerAsync(targetPlayerName).thenAccept(existingPhone -> {
-            if (existingPhone == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingPhone = numberManager.getPhoneNumberForPlayer(targetPlayerName);
+        if (existingPhone == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            numberManager
-                    .deletePhoneForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage("§aTelefone de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o telefone de " + targetPlayerName, e);
-                        player.sendMessage("§cErro ao remover o telefone de " + targetPlayerName
-                                + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        numberManager.deletePhoneForPlayer(targetPlayerName);
+        player.sendMessage("§aTelefone de " + targetPlayerName + " removido com sucesso.");
     }
 }

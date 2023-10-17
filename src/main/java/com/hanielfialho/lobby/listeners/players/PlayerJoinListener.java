@@ -23,6 +23,6 @@ public class PlayerJoinListener implements Listener {
 
     private void handlePlayerEntry(Player player) {
         PlayerDateManager dateManager = new PlayerDateManager(plugin);
-        dateManager.setPlayerEntryDateInDatabaseAsync(player.getName());
+        dateManager.setPlayerEntryDateInDatabase(player.getName());
     }
 }

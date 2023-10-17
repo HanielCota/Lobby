@@ -22,34 +22,26 @@ public class InstagramCommand extends BaseCommand {
     private void onInstagramCommand(Player player, String[] args) {
         String playerName = player.getName();
 
-        instagramManager.getInstagramForPlayerAsync(playerName).thenAccept(existingInstagram -> {
-            if (existingInstagram != null) {
-                player.sendMessage("§aSeu usuário do Instagram cadastrado é: @" + existingInstagram);
-                return;
-            }
+        String existingInstagram = instagramManager.getInstagramForPlayer(playerName);
+        if (existingInstagram != null) {
+            player.sendMessage("§aSeu usuário do Instagram cadastrado é: @" + existingInstagram);
+            return;
+        }
 
-            if (args.length < 1) {
-                player.sendMessage("");
-                player.sendMessage(
-                        "§cUse: /instagram <usuário> para cadastrar ou visualizar seu usuário do Instagram.");
-                player.sendMessage("");
-                return;
-            }
+        if (args.length < 1) {
+            player.sendMessage("");
+            player.sendMessage(
+                    "§cUse: /instagram <usuário> para cadastrar ou visualizar seu usuário do Instagram.");
+            player.sendMessage("");
+            return;
+        }
 
-            String instagramUsername = args[0];
+        String instagramUsername = args[0];
 
-            instagramManager
-                    .setInstagramForPlayerAsync(playerName, instagramUsername)
-                    .thenRun(() -> {
-                        player.sendMessage("§aUsuário do Instagram definido com sucesso: @" + instagramUsername);
-                        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
-                    })
-                    .exceptionally(e -> {
-                        logger.error("Erro ao definir o usuário do Instagram do jogador", e);
-                        player.sendMessage("§cErro ao definir o usuário do Instagram. Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        instagramManager.setInstagramForPlayer(playerName, instagramUsername);
+
+        player.sendMessage("§aUsuário do Instagram definido com sucesso: @" + instagramUsername);
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("delete")
@@ -66,21 +58,14 @@ public class InstagramCommand extends BaseCommand {
             return;
         }
 
-        instagramManager.getInstagramForPlayerAsync(targetPlayerName).thenAccept(existingInstagram -> {
-            if (existingInstagram == null) {
-                player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
-                return;
-            }
+        String existingInstagram = instagramManager.getInstagramForPlayer(targetPlayerName);
+        if (existingInstagram == null) {
+            player.sendMessage("§cO jogador " + targetPlayerName + " não foi encontrado no banco de dados.");
+            return;
+        }
 
-            instagramManager
-                    .deleteInstagramForPlayerAsync(targetPlayerName)
-                    .thenRun(() -> player.sendMessage("§aInstagram de " + targetPlayerName + " removido com sucesso."))
-                    .exceptionally(e -> {
-                        logger.error("Erro ao remover o Instagram de " + targetPlayerName, e);
-                        player.sendMessage("§cErro ao remover o Instagram de " + targetPlayerName
-                                + ". Por favor, tente novamente.");
-                        return null;
-                    });
-        });
+        instagramManager.deleteInstagramForPlayer(targetPlayerName);
+
+        player.sendMessage("§aInstagram de " + targetPlayerName + " removido com sucesso.");
     }
 }

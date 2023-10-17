@@ -1,69 +1,112 @@
 package com.hanielfialho.lobby.manager.player;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.hanielfialho.lobby.LobbyPlugin;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
-@AllArgsConstructor
 @Slf4j
 public class PlayerNumberManager {
 
-    private LobbyPlugin plugin;
+    private final LobbyPlugin plugin;
 
-    public CompletableFuture<Void> setPhoneNumberForPlayerAsync(String playerName, String phoneNumber) {
-        return CompletableFuture.runAsync(() -> {
-            String query = "UPDATE lobby SET phone_number = ? WHERE player_name = ?";
+    private static final long CACHE_EXPIRATION_MINUTES = 30;
+    private static final long MAX_CACHE_SIZE = 1000;
 
-            try (PreparedStatement statement =
-                    plugin.getDatabaseManager().getConnection().prepareStatement(query)) {
-                statement.setString(1, phoneNumber);
-                statement.setString(2, playerName);
+    // SQL queries as constants
+    private static final String UPDATE_PHONE_NUMBER_QUERY = "UPDATE lobby SET phone_number = ? WHERE player_name = ?";
+    private static final String SELECT_PHONE_NUMBER_QUERY = "SELECT phone_number FROM lobby WHERE player_name = ?";
+    private static final String DELETE_PHONE_NUMBER_QUERY = "UPDATE lobby SET phone_number = NULL WHERE player_name = ?";
 
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                log.error("Error while setting phone number for player in the database", e);
-            }
-        });
+    private final Cache<String, String> phoneNumberCache = Caffeine.newBuilder()
+            .expireAfterWrite(CACHE_EXPIRATION_MINUTES, TimeUnit.MINUTES)
+            .maximumSize(MAX_CACHE_SIZE)
+            .build();
+
+    public PlayerNumberManager(LobbyPlugin plugin) {
+        this.plugin = plugin;
     }
 
-    public CompletableFuture<String> getPhoneNumberForPlayerAsync(String playerName) {
-        return CompletableFuture.supplyAsync(() -> {
-            String query = "SELECT phone_number FROM lobby WHERE player_name = ?";
+    public void setPhoneNumberForPlayer(String playerName, String phoneNumber) {
+        try {
+            updatePhoneNumberInDatabase(playerName, phoneNumber);
 
-            try (PreparedStatement statement =
-                    plugin.getDatabaseManager().getConnection().prepareStatement(query)) {
-                statement.setString(1, playerName);
+            // Update the cache
+            phoneNumberCache.put(playerName, phoneNumber);
+        } catch (SQLException e) {
+            log.error("Error while setting phone number for player in the database", e);
+        }
+    }
 
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString("phone_number");
-                    }
+    public String getPhoneNumberForPlayer(String playerName) {
+        // Check the cache first
+        String cachedPhoneNumber = phoneNumberCache.getIfPresent(playerName);
+        if (cachedPhoneNumber != null) {
+            return cachedPhoneNumber;
+        }
+
+        try {
+            String phoneNumber = queryPhoneNumberFromDatabase(playerName);
+            if (phoneNumber != null) {
+                // Only put the phone number in the cache if it's not null
+                phoneNumberCache.put(playerName, phoneNumber);
+            }
+            return phoneNumber;
+        } catch (SQLException e) {
+            log.error("Error while getting phone number for player from the database", e);
+        }
+
+        // If the phoneNumber is null, don't cache it, and return null
+        return null;
+    }
+
+    public void deletePhoneForPlayer(String playerName) {
+        try {
+            deletePhoneNumberFromDatabase(playerName);
+
+            // Remove the phone number from the cache
+            phoneNumberCache.invalidate(playerName);
+        } catch (SQLException e) {
+            log.error("Error while deleting phone number for player in the database", e);
+        }
+    }
+
+    private void updatePhoneNumberInDatabase(String... params) throws SQLException {
+        try (PreparedStatement statement = plugin.getDatabaseManager()
+                .getConnection()
+                .prepareStatement(UPDATE_PHONE_NUMBER_QUERY)) {
+            for (int i = 0; i < params.length; i++) {
+                statement.setString(i + 1, params[i]);
+            }
+            statement.executeUpdate();
+        }
+    }
+
+    private String queryPhoneNumberFromDatabase(String... params) throws SQLException {
+        try (PreparedStatement statement = plugin.getDatabaseManager()
+                .getConnection()
+                .prepareStatement(SELECT_PHONE_NUMBER_QUERY)) {
+            statement.setString(1, params[0]);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("phone_number");
                 }
-            } catch (SQLException e) {
-                log.error("Error while getting phone number for player from the database", e);
             }
-
-            return null;
-        });
+        }
+        return null;
     }
 
-    public CompletableFuture<Void> deletePhoneForPlayerAsync(String playerName) {
-        return CompletableFuture.runAsync(() -> {
-            String query = "UPDATE lobby SET phone_number = NULL WHERE player_name = ?";
-
-            try (PreparedStatement statement =
-                    plugin.getDatabaseManager().getConnection().prepareStatement(query)) {
-                statement.setString(1, playerName);
-
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                log.error("Error while deleting phone for player in the database", e);
-            }
-        });
+    private void deletePhoneNumberFromDatabase(String... params) throws SQLException {
+        try (PreparedStatement statement = plugin.getDatabaseManager()
+                .getConnection()
+                .prepareStatement(DELETE_PHONE_NUMBER_QUERY)) {
+            statement.setString(1, params[0]);
+            statement.executeUpdate();
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.hanielfialho.lobby.manager.country.CountryDatabaseManager;
 import com.hanielfialho.lobby.manager.discord.DiscordDatabaseManager;
 import com.hanielfialho.lobby.manager.email.EmailDatabaseManager;
 import com.hanielfialho.lobby.manager.instagram.InstagramDatabaseManager;
+import com.hanielfialho.lobby.manager.player.PlayerDateManager;
 import com.hanielfialho.lobby.manager.player.PlayerNumberManager;
 import com.hanielfialho.lobby.manager.twitter.TwitterDatabaseManager;
 import com.hanielfialho.lobby.utils.ConfigUtils;
@@ -17,6 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public final class LobbyPlugin extends JavaPlugin {
+
+    public static LobbyPlugin getInstance() {
+        return JavaPlugin.getPlugin(LobbyPlugin.class);
+    }
 
     // Data Managers
     private DatabaseTableCreator tableCreator;
@@ -29,6 +34,7 @@ public final class LobbyPlugin extends JavaPlugin {
     private InstagramDatabaseManager instagramDatabaseManager;
     private DiscordDatabaseManager discordDatabaseManager;
     private CountryDatabaseManager countryDatabaseManager;
+    private PlayerDateManager playerDateManager;
 
     @Override
     public void onEnable() {
@@ -40,6 +46,7 @@ public final class LobbyPlugin extends JavaPlugin {
         initializeInstagramManager();
         initializeDiscordManager();
         initializeCountyManager();
+        initializePlayerDateManager();
         initializeCommands();
         initializeListeners();
     }
@@ -83,6 +90,10 @@ public final class LobbyPlugin extends JavaPlugin {
 
     private void initializeCountyManager() {
         countryDatabaseManager = new CountryDatabaseManager(this);
+    }
+
+    private void initializePlayerDateManager() {
+        playerDateManager = new PlayerDateManager(this);
     }
 
     private void initializeCommands() {
