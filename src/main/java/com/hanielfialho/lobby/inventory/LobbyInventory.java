@@ -1,6 +1,5 @@
 package com.hanielfialho.lobby.inventory;
 
-
 import com.hanielfialho.lobby.external.inventory.FastInv;
 import org.bukkit.inventory.ItemStack;
 
