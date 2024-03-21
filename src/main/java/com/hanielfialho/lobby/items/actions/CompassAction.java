@@ -10,7 +10,7 @@ public class CompassAction implements ItemAction {
     @Override
     public void execute(Player player) {
 
-        CompassInventory compassInventory = CompassInventoryFactory.createCompassInventory();
+        CompassInventory compassInventory = CompassInventoryFactory.createCompassInventory(player);
         compassInventory.open(player);
     }
 }

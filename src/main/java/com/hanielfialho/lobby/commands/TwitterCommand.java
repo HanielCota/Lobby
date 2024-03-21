@@ -40,7 +40,7 @@ public class TwitterCommand extends BaseCommand {
         twitterManager.setTwitterForPlayer(playerName, twitterUsername);
 
         player.sendMessage("§aUsuário do Twitter definido com sucesso: @" + twitterUsername);
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10F, 1F);
     }
 
     @Subcommand("delete")

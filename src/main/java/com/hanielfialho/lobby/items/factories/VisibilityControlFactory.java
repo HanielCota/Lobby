@@ -9,7 +9,7 @@ public class VisibilityControlFactory implements ItemFactory {
 
     @Override
     public ItemStack createItem(int slot) {
-        return new ItemBuilder(Material.INK_SACK)
+        return new ItemBuilder(Material.GREEN_DYE)
                 .setName("§aEsconder / Mostrar")
                 .setLore(
                         "§7(Clique com o botão direito do mouse)",

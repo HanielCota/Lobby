@@ -41,7 +41,7 @@ public class CountryCommand extends BaseCommand {
         countryManager.setCountryForPlayer(playerName, country);
 
         player.sendMessage("§aPaís definido com sucesso: " + capitalizeFirstLetter(country));
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10F, 1F);
     }
 
     @Subcommand("delete")

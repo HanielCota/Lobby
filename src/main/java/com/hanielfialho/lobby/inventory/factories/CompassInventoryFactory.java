@@ -1,19 +1,26 @@
 package com.hanielfialho.lobby.inventory.factories;
 
+import com.hanielfialho.lobby.LobbyPlugin;
 import com.hanielfialho.lobby.inventory.CompassInventory;
 import com.hanielfialho.lobby.utils.ItemBuilder;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import java.util.HashMap;
+import java.util.Map;
+
 public class CompassInventoryFactory {
 
-    public static final String RANDOM_JOIN_SERVER_SKULL =
-            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjRkN2NjNGRjYTk4NmE1M2YxZDZiNTJhYWYzNzZkYzZhY2M3M2I4YjI4N2Y0MmRjOGZlZjU4MDhiYjVkNzYifX19";
+    private static final Map<Player, BukkitRunnable> iconAnimations = new HashMap<>();
+    private static final Material[] bedMaterials = {Material.RED_BED, Material.BLUE_BED, Material.BLACK_BED, Material.YELLOW_BED, Material.PINK_BED};
+    private static final Material[] tntMaterials = {Material.TNT, Material.TNT_MINECART, Material.CREEPER_SPAWN_EGG};
+    private static final Map<Player, Integer> colorIndexes = new HashMap<>();
+    private static final Map<Player, Integer> colorIndexesFac = new HashMap<>();
 
-    public static CompassInventory createCompassInventory() {
+    public static CompassInventory createCompassInventory(Player player) {
         CompassInventory compassInventory = new CompassInventory(54, "Escolha um jogo");
 
         ItemStack lobbyItem = new ItemBuilder(Material.NETHER_STAR)
@@ -24,44 +31,63 @@ public class CompassInventoryFactory {
                 )
                 .build();
 
-        ItemStack factionsItem = new ItemBuilder(Material.TNT)
-                .setName("§aFactions Legacy")
-                .setLore(
-                        "§7Jogue Factions Legacy",
-                        "§7Entre na aventura das facções"
-                )
-                .build();
+        compassInventory.setItemStack(40, lobbyItem);
 
-        ItemStack bedWarsItem = new ItemBuilder(Material.BED)
-                .setName("§aBedWars")
-                .setLore(
-                        "§7Jogue BedWars",
-                        "§7Enfrente seus adversários"
-                )
-                .build();
+        BukkitRunnable animation = new BukkitRunnable() {
+            @Override
+            public void run() {
+                ItemStack updatedBedWarsItem = createBedWarsItem(player);
+                ItemStack updateFactionsItem = createFactionsItem(player);
 
-        ItemStack rankUPItem = new ItemBuilder(Material.EXP_BOTTLE)
-                .setName("§aRankUP")
-                .setLore(
-                        "§7Aprimore sua classificação",
-                        "§7Suba de nível e se destaque"
-                )
-                .build();
+                compassInventory.setItemStack(21, updatedBedWarsItem);
+                compassInventory.setItemStack(23, updateFactionsItem);
+            }
+        };
+        animation.runTaskTimer(LobbyPlugin.getInstance(), 20L, 20L);
+        iconAnimations.put(player, animation);
 
-        ItemStack joinRandomServer = new ItemBuilder(RANDOM_JOIN_SERVER_SKULL)
-                .setName("§aServidor Aleatório")
-                .setLore(
-                        "§7Experimente um servidor aleatório",
-                        "§7Uma escolha divertida!"
-                )
-                .build();
-
-        compassInventory.setItemStack(19, lobbyItem);
-        compassInventory.setItemStack(22, factionsItem);
-        compassInventory.setItemStack(21, bedWarsItem);
-        compassInventory.setItemStack(23, rankUPItem);
-        compassInventory.setItemStack(49, joinRandomServer);
+        // Initial setup for bedWarsItem and factionsItem
+        compassInventory.setItemStack(21, createBedWarsItem(player));
+        compassInventory.setItemStack(23, createFactionsItem(player));
 
         return compassInventory;
+    }
+
+    private static ItemStack createBedWarsItem(Player player) {
+        int colorIndex = colorIndexes.getOrDefault(player, 0);
+        Material bedMaterial = bedMaterials[colorIndex];
+
+        ItemStack bedWarsItem = new ItemBuilder(bedMaterial)
+                .setName("§aBedWars")
+                .setLore("§7Jogue BedWars", "§7Enfrente seus adversários", "",
+                        "§7Com outros " + PlaceholderAPI.setPlaceholders(player, "%bungee_bedwars% jogadores."))
+                .build();
+
+        colorIndexes.put(player, (colorIndex + 1) % bedMaterials.length);
+
+        return bedWarsItem;
+    }
+
+    private static ItemStack createFactionsItem(Player player) {
+        int colorIndex = colorIndexesFac.getOrDefault(player, 0);
+        Material facMaterial = tntMaterials[colorIndex];
+
+        ItemStack factionsItem = new ItemBuilder(facMaterial)
+                .setName("§aFactions Legacy")
+                .setLore("§7Jogue Factions Legacy", "§7Entre na aventura das facções", "",
+                        "§7Com outros " + PlaceholderAPI.setPlaceholders(player, "%bungee_factions% jogadores."))
+                .build();
+
+        colorIndexesFac.put(player, (colorIndex + 1) % tntMaterials.length);
+
+        return factionsItem;
+    }
+
+
+    public static void stopIconAnimation(Player player) {
+        BukkitRunnable animation = iconAnimations.remove(player);
+        if (animation != null) {
+            animation.cancel();
+        }
     }
 }

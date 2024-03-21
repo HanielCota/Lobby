@@ -9,7 +9,7 @@ public class GadgetsFactory implements ItemFactory {
 
     @Override
     public ItemStack createItem(int slot) {
-        return new ItemBuilder(Material.RAW_FISH)
+        return new ItemBuilder(Material.PUFFERFISH)
                 .setName("§aGadgets")
                 .setLore("§7(Clique com o botão direito do mouse)", "", "§7para comprar seus gadgets e se divertir.")
                 .setDurability((short) 3)

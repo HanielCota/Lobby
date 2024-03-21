@@ -45,14 +45,14 @@ public class ProfileFactory {
             String instagram,
             String phone,
             String twitter) {
-        ProfileInventory profileInventory = new ProfileInventory(54, "Player Profile");
+        ProfileInventory profileInventory = new ProfileInventory(54, "Perfil");
 
-        ItemStack timePlayedItem = new ItemBuilder(Material.WATCH)
+        ItemStack timePlayedItem = new ItemBuilder(Material.CLOCK)
                 .setName("§aTempo jogado")
                 .setLore("§7Primeiro login: " + playerEntryDate)
                 .build();
 
-        ItemStack playerHeadItem = new ItemBuilder(Material.SKULL_ITEM)
+        ItemStack playerHeadItem = new ItemBuilder(Material.PLAYER_HEAD)
                 .setName("§aSuas Informações")
                 .setLore(
                         "§7Primeiro login: " + playerEntryDate,

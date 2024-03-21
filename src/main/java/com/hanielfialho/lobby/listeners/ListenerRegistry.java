@@ -26,6 +26,7 @@ public final class ListenerRegistry {
         listenerManager.addListener(new PlayerFoodListener());
         listenerManager.addListener(new PlayerDeathListener());
         listenerManager.addListener(new PlayerDropItemListener());
+        listenerManager.addListener(new PlayerChatListener());
 
         listenerManager.addListener(new InventoryClickListener());
         FastInvManager.register(plugin);

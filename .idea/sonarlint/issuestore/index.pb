@@ -202,3 +202,11 @@ Lsrc/main/java/com/hanielfialho/lobby/inventory/factories/ProfileFactory.java,4
 Ssrc/main/java/com/hanielfialho/lobby/inventory/factories/LobbyInventoryFactory.java,1\4\14c32f17cbd7d7d441eb30ef1fb75c6e924ed320
 r
 Bsrc/main/java/com/hanielfialho/lobby/inventory/LobbyInventory.java,2\a\2a27897d9f985ac3709dde1ed5c3a4aa0d83ccde
+~
+Nsrc/main/java/com/hanielfialho/lobby/listeners/players/PlayerChatListener.java,f\f\ff4770fcad1ff8b5fde190c04bade413d2864385
+m
+=src/main/java/com/hanielfialho/lobby/commands/WebCommand.java,4\8\48cd300e2eeeb0792bc2d464b59ed129f082994f
+]
+-.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0

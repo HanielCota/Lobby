@@ -11,12 +11,14 @@ public class LobbyInventoryFactory {
 
         LobbyInventory lobbyInventory = new LobbyInventory(3 * 9, "Escolher seu Lobby");
 
-        ItemStack lobby = new ItemBuilder(Material.INK_SACK)
+        ItemStack lobby = new ItemBuilder(Material.GREEN_DYE)
                 .setDurability((short) 10)
+                .setName("§aLobby 1")
                 .setLore("§7Lobby 1", "§aDisponível")
                 .build();
 
-        ItemStack lobby1 = new ItemBuilder(Material.INK_SACK)
+        ItemStack lobby1 = new ItemBuilder(Material.GREEN_DYE)
+                .setName("§aLobby 2")
                 .setDurability((short) 10)
                 .setLore("§7Lobby 2", "§aDisponível")
                 .build();

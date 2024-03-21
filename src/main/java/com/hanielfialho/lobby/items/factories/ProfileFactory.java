@@ -13,7 +13,7 @@ public class ProfileFactory implements ItemFactory {
 
     @Override
     public ItemStack createItem(int slot) {
-        return new ItemBuilder(Material.SKULL_ITEM)
+        return new ItemBuilder(Material.PLAYER_HEAD)
                 .setName("§aPerfil")
                 .setLore("§7(Clique com o botão direito do mouse)", "", "§7para configurar suas preferências.")
                 .setSkullOwner(playerName)

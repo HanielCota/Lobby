@@ -5,7 +5,9 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import com.hanielfialho.lobby.manager.discord.DiscordDatabaseManager;
+import com.hanielfialho.lobby.utils.ClickMessage;
 import lombok.AllArgsConstructor;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class DiscordCommand extends BaseCommand {
         discordManager.setDiscordForPlayer(playerName, discordUsername);
 
         player.sendMessage("§aUsuário do Discord definido com sucesso: " + discordUsername);
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10F, 1F);
     }
 
     @Subcommand("delete")
@@ -66,5 +68,11 @@ public class DiscordCommand extends BaseCommand {
         discordManager.deleteDiscordForPlayer(targetPlayerName);
 
         player.sendMessage("§aUsuário do Discord de " + targetPlayerName + " removido com sucesso.");
+    }
+
+    @Subcommand("ir")
+    private void onRedirectDiscord(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10.0F, 10.0F);
+        new ClickMessage("§eClique aqui para acessar nosso Discord oficial.").click(ClickEvent.Action.OPEN_URL, "https://floruitmc.com/discord").send(player);
     }
 }

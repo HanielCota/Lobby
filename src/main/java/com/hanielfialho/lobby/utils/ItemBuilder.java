@@ -7,7 +7,6 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,287 +18,374 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ItemBuilder {
 
-    private final ItemStack itemStack;
-    private final Map<String, ItemMeta> cachedSkulls = Maps.newHashMap();
-    private Consumer<PlayerInteractEvent> itemClickEventConsumer;
+    private final ItemStack is;
+    private final Map<String, ItemMeta> cacheSkull = Maps.newHashMap();
 
-    public ItemBuilder(Material material) {
-        this(material, 1);
+    public ItemBuilder(Material m) {
+
+        this(m, 1);
+
     }
 
-    public ItemBuilder(String materialName) {
-        if (materialName == null) {
-            itemStack = new ItemStack(Material.AIR, 1);
-            return;
+    public ItemBuilder(String material) {
+        boolean skull = material.startsWith("eyJ0");
+        is = new ItemStack(skull ? Material.PLAYER_HEAD : Material.valueOf(material), 1);
+        if (skull) {
+            is.setDurability((short) 3);
+            setSkull(material);
         }
-
-        boolean isSkull = materialName.startsWith("eyJ0");
-        Material material = Material.getMaterial(materialName.toUpperCase());
-
-        if (isSkull) {
-            itemStack = new ItemStack(Material.SKULL_ITEM, 1);
-            itemStack.setDurability((short) 3);
-            setSkull(materialName);
-            return;
-        }
-        itemStack = new ItemStack(Objects.requireNonNullElse(material, Material.AIR), 1);
     }
 
-    public ItemBuilder(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public ItemBuilder(ItemStack is) {
+        this.is = is;
+
     }
 
-    public ItemBuilder(Material material, int quantity) {
-        itemStack = new ItemStack(material, quantity);
+    public ItemBuilder(Material m, int quantia) {
+        is = new ItemStack(m, quantia);
+
     }
 
-    public ItemBuilder(Material material, int quantity, byte durability) {
-        itemStack = new ItemStack(material, quantity, durability);
+    public ItemBuilder(Material m, int quantia, byte durabilidade) {
+        is = new ItemStack(m, quantia, durabilidade);
+
     }
 
-    public ItemBuilder(ItemBuilder other) {
-        this.itemStack = other.itemStack.clone();
+    @Override
+    public ItemBuilder clone() {
+        return new ItemBuilder(is);
+
     }
 
-    public ItemBuilder setDurability(short durability) {
-        itemStack.setDurability(durability);
+    public ItemBuilder setDurability(Short durabilidade) {
+
+        is.setDurability(durabilidade);
+
+        return this;
+
+    }
+
+    public ItemBuilder setQuantity(int number) {
+        is.setAmount(number);
         return this;
     }
 
-    public ItemBuilder setQuantity(int quantity) {
-        itemStack.setAmount(quantity);
-        return this;
-    }
 
     public ItemBuilder setPotion(PotionEffectType type, int duration, int amplifier) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta instanceof PotionMeta potionMeta) {
-            potionMeta.addCustomEffect(new PotionEffect(type, duration, amplifier), true);
-            itemStack.setItemMeta(potionMeta);
-        }
+        PotionMeta im = (PotionMeta) is.getItemMeta();
+        im.addCustomEffect(new PotionEffect(type, duration, amplifier), true);
+        is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder setName(String name) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(name);
-        itemStack.setItemMeta(itemMeta);
+    public ItemBuilder setName(String nome) {
+
+        ItemMeta im = is.getItemMeta();
+
+        im.setDisplayName(nome);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder modifyName(String text, String replace) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        String displayName = itemMeta.getDisplayName();
-        displayName = displayName.replace(text, replace);
-        itemMeta.setDisplayName(displayName);
-        itemStack.setItemMeta(itemMeta);
+        ItemMeta im = is.getItemMeta();
+
+        im.setDisplayName(is.getItemMeta().getDisplayName().replace(text, replace));
+
+        is.setItemMeta(im);
+
         return this;
     }
 
-    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level) {
-        itemStack.addUnsafeEnchantment(enchantment, level);
+    public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
+
+        is.addUnsafeEnchantment(ench, level);
+
         return this;
+
     }
 
-    public ItemBuilder removeEnchantment(Enchantment enchantment) {
-        itemStack.removeEnchantment(enchantment);
+    public ItemBuilder removeEnchantment(Enchantment ench) {
+
+        is.removeEnchantment(ench);
+
         return this;
+
     }
 
-    public ItemBuilder setSkullOwner(String owner) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta instanceof SkullMeta skullMeta) {
-            skullMeta.setOwner(owner);
-            itemStack.setItemMeta(skullMeta);
-            itemStack.setDurability((short) 3);
+    public ItemBuilder setSkullOwner(String dono) {
+
+        try {
+
+            SkullMeta im = (SkullMeta) is.getItemMeta();
+
+            im.setOwner(dono);
+
+            is.setItemMeta(im);
+            is.setDurability((short) 3);
+
+        } catch (ClassCastException ignored) {
         }
+
         return this;
+
     }
 
-    public ItemBuilder addEnchant(Enchantment enchantment, int level) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addEnchant(enchantment, level, true);
-        itemStack.setItemMeta(itemMeta);
+    public ItemBuilder addEnchant(Enchantment ench, int level) {
+
+        ItemMeta im = is.getItemMeta();
+
+        im.addEnchant(ench, level, true);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder setAmount(int amount) {
-        itemStack.setAmount(amount);
+        is.setAmount(amount);
         return this;
     }
 
     public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments) {
-        itemStack.addEnchantments(enchantments);
+
+        is.addEnchantments(enchantments);
+
         return this;
+
     }
 
     public ItemBuilder setInfinityDurability() {
-        itemStack.setDurability(Short.MAX_VALUE);
+
+        is.setDurability(Short.MAX_VALUE);
+
         return this;
+
     }
 
     public ItemBuilder addItemFlag(ItemFlag flag) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addItemFlags(flag);
-        itemStack.setItemMeta(itemMeta);
+
+        is.getItemMeta().addItemFlags(flag);
+
         return this;
+
     }
 
     public ItemBuilder setLore(String... lore) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(Arrays.asList(lore));
-        itemStack.setItemMeta(itemMeta);
+
+        ItemMeta im = is.getItemMeta();
+
+        im.setLore(Arrays.asList(lore));
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder replaceLore(String key, String value) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore != null) {
-            lore = lore.stream().map(line -> line.replace(key, value)).toList();
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
-        }
+        ItemMeta im = is.getItemMeta();
+
+        List<String> lore = im.getLore()
+                .stream()
+                .map($ -> $.replace(key, value))
+                .collect(Collectors.toList());
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
         return this;
     }
 
     public ItemBuilder setLore(List<String> lore) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
+
+        ItemMeta im = is.getItemMeta();
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder setLoreIf(boolean condition, String... lore) {
         if (!condition) return this;
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(Arrays.asList(lore));
-        itemStack.setItemMeta(itemMeta);
+        ItemMeta im = is.getItemMeta();
+
+        im.setLore(Arrays.asList(lore));
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder setLoreIf(boolean condition, List<String> lore) {
         if (!condition) return this;
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
+        ItemMeta im = is.getItemMeta();
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
-    public ItemBuilder removeLoreLine(String line) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore != null) {
-            lore.remove(line);
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
-        }
+    public ItemBuilder removeLoreLine(String linha) {
+
+        ItemMeta im = is.getItemMeta();
+
+        List<String> lore = new ArrayList<>(im.getLore());
+
+        if (!lore.contains(linha)) return this;
+
+        lore.remove(linha);
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder removeLoreLine(int index) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore != null && index >= 0 && index < lore.size()) {
-            lore.remove(index);
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
-        }
+
+        ItemMeta im = is.getItemMeta();
+
+        List<String> lore = new ArrayList<>(im.getLore());
+
+        if (index < 0 || index > lore.size()) return this;
+
+        lore.remove(index);
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
         return this;
+
     }
 
     public ItemBuilder addLoreIf(boolean condition, String string) {
         if (!condition) return this;
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        ItemMeta im = is.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
         lore.add(string);
-        itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
+        im.setLore(lore);
+        is.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder addLoreLine(String string) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        ItemMeta im = is.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
         lore.add(string);
-        itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
+        im.setLore(lore);
+        is.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder addLoreLine(int pos, String string) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore != null && pos >= 0 && pos < lore.size()) {
-            lore.set(pos, string);
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
+
+        ItemMeta im = is.getItemMeta();
+
+        List<String> lore = new ArrayList<>(im.getLore());
+
+        lore.set(pos, string);
+
+        im.setLore(lore);
+
+        is.setItemMeta(im);
+
+        return this;
+
+    }
+
+    public ItemBuilder setDyeColor(DyeColor cor) {
+
+        is.setDurability(cor.getDyeData());
+
+        return this;
+
+    }
+
+    @Deprecated
+
+    public ItemBuilder setWoolColor(DyeColor cor) {
+
+        if (!is.getType().toString().contains("WOOL")) return this;
+
+        is.setDurability(cor.getWoolData());
+
+        return this;
+
+    }
+
+    public ItemBuilder setLeatherArmorColor(Color cor) {
+
+        try {
+
+            LeatherArmorMeta im = (LeatherArmorMeta) is.getItemMeta();
+
+            im.setColor(cor);
+
+            is.setItemMeta(im);
+
+        } catch (ClassCastException ignored) {
         }
-        return this;
-    }
 
-    public ItemBuilder setDyeColor(DyeColor color) {
-        itemStack.setDurability(color.getDyeData());
         return this;
-    }
 
-    public ItemBuilder setWoolColor(DyeColor color) {
-        if (!itemStack.getType().toString().contains("WOOL")) return this;
-        itemStack.setDurability(color.getWoolData());
-        return this;
-    }
-
-    public ItemBuilder setLeatherArmorColor(Color color) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta instanceof LeatherArmorMeta leatherArmorMeta) {
-            leatherArmorMeta.setColor(color);
-            itemStack.setItemMeta(leatherArmorMeta);
-        }
-        return this;
     }
 
     public ItemBuilder setSkull(String url) {
-        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-        if (cachedSkulls.containsKey(url)) {
-            itemStack.setItemMeta(cachedSkulls.get(url));
+        SkullMeta headMeta = (SkullMeta) is.getItemMeta();
+        if (cacheSkull.containsKey(url)) {
+            is.setItemMeta(cacheSkull.get(url));
             return this;
         }
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", url));
         Field profileField;
         try {
-            profileField = skullMeta.getClass().getDeclaredField("profile");
+            profileField = headMeta.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);
-            profileField.set(skullMeta, profile);
+            profileField.set(headMeta, profile);
         } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
+            return this;
         }
-        itemStack.setItemMeta(skullMeta);
-        cachedSkulls.put(url, skullMeta);
+        is.setItemMeta(headMeta);
+        cacheSkull.put(url, headMeta);
         return this;
     }
 
     public ItemStack build() {
-        return itemStack;
+
+        return is;
+
     }
 
     public ItemBuilder removeLastLoreLine() {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore != null && !lore.isEmpty()) {
-            lore.remove(lore.size() - 1);
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
-        }
+        ItemMeta im = is.getItemMeta();
+        List<String> lore = new ArrayList<>(im.getLore());
+        lore.remove(lore.size() - 1);
+        im.setLore(lore);
+        is.setItemMeta(im);
+
         return this;
     }
 }

@@ -31,7 +31,7 @@ public class PlayerDropItemListener implements Listener {
 
         if (count < 3) {
             player.sendMessage("§cVocê precisa soltar o item duas vezes para descartá-lo.");
-            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10F, 10F);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 10F, 10F);
             event.setCancelled(true);
         }
     }

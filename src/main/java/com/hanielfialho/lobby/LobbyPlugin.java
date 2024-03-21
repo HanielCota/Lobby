@@ -14,14 +14,15 @@ import com.hanielfialho.lobby.manager.player.PlayerNumberManager;
 import com.hanielfialho.lobby.manager.twitter.TwitterDatabaseManager;
 import com.hanielfialho.lobby.utils.ConfigUtils;
 import lombok.Getter;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 
 @Getter
 public final class LobbyPlugin extends JavaPlugin {
-
-    public static LobbyPlugin getInstance() {
-        return JavaPlugin.getPlugin(LobbyPlugin.class);
-    }
 
     // Data Managers
     private DatabaseTableCreator tableCreator;
@@ -36,6 +37,25 @@ public final class LobbyPlugin extends JavaPlugin {
     private CountryDatabaseManager countryDatabaseManager;
     private PlayerDateManager playerDateManager;
 
+    public static LobbyPlugin getInstance() {
+        return JavaPlugin.getPlugin(LobbyPlugin.class);
+    }
+
+    public static void sendPlayerToServer(Player player, String server) {
+        try {
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(b);
+            out.writeUTF("Connect");
+            out.writeUTF(server);
+            player.sendPluginMessage(getInstance(), "BungeeCord", b.toByteArray());
+            b.close();
+            out.close();
+        } catch (Exception var4) {
+            player.sendMessage(ChatColor.RED + "Error when trying to connect to " + server);
+        }
+
+    }
+
     @Override
     public void onEnable() {
         initializeDatabase();
@@ -49,6 +69,8 @@ public final class LobbyPlugin extends JavaPlugin {
         initializePlayerDateManager();
         initializeCommands();
         initializeListeners();
+
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     private void initializeDatabase() {
@@ -112,6 +134,7 @@ public final class LobbyPlugin extends JavaPlugin {
         commandManager.registerCommand(new InstagramCommand(instagramDatabaseManager));
         commandManager.registerCommand(new DiscordCommand(discordDatabaseManager));
         commandManager.registerCommand(new CountryCommand(countryDatabaseManager));
+        commandManager.registerCommand(new WebCommand());
     }
 
     private void createTables() {

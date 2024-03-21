@@ -57,7 +57,7 @@ public class EmailCommand extends BaseCommand {
         emailManager.setEmailForPlayer(playerName, email);
 
         player.sendMessage("§aE-mail definido com sucesso para: " + email);
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10F, 1F);
     }
 
     @Subcommand("domain")

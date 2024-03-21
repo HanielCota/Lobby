@@ -41,7 +41,7 @@ public class InstagramCommand extends BaseCommand {
         instagramManager.setInstagramForPlayer(playerName, instagramUsername);
 
         player.sendMessage("§aUsuário do Instagram definido com sucesso: @" + instagramUsername);
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10F, 1F);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10F, 1F);
     }
 
     @Subcommand("delete")

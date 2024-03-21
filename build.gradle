@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id("io.papermc.paperweight.userdev") version "1.5.11"
 }
 
 group = 'com.hanielfialho'
@@ -17,13 +18,19 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
     implementation 'org.jetbrains:annotations:24.1.0'
 
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+
     //api for minecraft
-    compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
+    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
 
     //caffeine cache
     implementation "com.github.ben-manes.caffeine:caffeine:3.1.8"

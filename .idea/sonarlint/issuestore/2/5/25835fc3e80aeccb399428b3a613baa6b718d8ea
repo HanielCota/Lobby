@@ -1,12 +1,78 @@
 
-U
-java:S1874ü"2Remove this use of "getDyeData"; it is deprecated.(ç€€úıÿÿÿÿ8Ô²›™®1
-Q
-java:S1874‚"3Remove this use of "getWoolData"; it is deprecated.(†ıö8Ù²›™®1
-J
-java:S3011š",This accessibility update should be removed.(ªÇµ”8ú²›™®1
-O
-java:S3011›",This accessibility bypass should be removed.(ùÁúáøÿÿÿÿ8û²›™®1
-K	java:S108œ")Either remove or fill this block of code.(µèÁæıÿÿÿÿ8†³›™®1
-W
-java:S1068":Remove this unused "itemClickEventConsumer" private field.(ˆ¶ÿ»8•³›™®1
+“	java:S117Ç"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á„µ8ìÏÍûâ1J$82709535-375a-4641-8b88-e260c0434bb5
+x
+java:S1874&"5Remove this use of "setDurability"; it is deprecated.(€ˆ±œ8—†ıâ1J$a7e06709-665b-42ca-871c-3582f1cbcacd
+t
+java:S18746"1Remove this use of "ItemStack"; it is deprecated.(œ¶±½8˜†ıâ1J$d539c240-7dc7-4b2f-a27a-63024dac2990
+–
+java:S2975;"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(¶•ÊŞ8‹ĞÍûâ1J$7cd152db-f53a-432f-a843-b4e8158cc893
+‹
+java:S1182;"HUse super.clone() to create and seed the cloned instance to be returned.(¶•ÊŞ8‹ĞÍûâ1J$6154f826-9660-491b-8320-3b0c68cf1867
+x
+java:S1874B"5Remove this use of "setDurability"; it is deprecated.(¤¹ˆƒ8™†ıâ1J$4c45eee7-3a5b-4620-af12-6a7ef4ad44eb
+~
+java:S1874Y"6Remove this use of "setDisplayName"; it is deprecated.(†ºƒ…ıÿÿÿÿ8›†ıâ1J$2ec69e8e-fa4e-490d-bda1-fe293d97b5db
+~
+java:S1874d"6Remove this use of "setDisplayName"; it is deprecated.(¥ºø¨ûÿÿÿÿ8›†ıâ1J$0d449391-bc6a-434f-ac36-9156eea3068c
+~
+java:S1874d"6Remove this use of "getDisplayName"; it is deprecated.(¥ºø¨ûÿÿÿÿ8›†ıâ1J$dfeba7de-cf8a-416f-8356-81d29e3bde6c
+s
+java:S1874"0Remove this use of "setOwner"; it is deprecated.(¿ƒû38†ıâ1J$2e745c91-9b33-47e1-8b32-7959d650a932
+y
+java:S1874„"5Remove this use of "setDurability"; it is deprecated.(€ˆ±œ8†ıâ1J$bcde9782-fc20-4da7-b671-84315823b9b0
+q	java:S108†")Either remove or fill this block of code.(î»ˆŸøÿÿÿÿ8ĞÍûâ1J$3393e625-4763-43d2-9f85-09c232b17a7e
+~
+java:S1874¨"5Remove this use of "setDurability"; it is deprecated.(½øúîıÿÿÿÿ8†ıâ1J$04b691d1-2c2c-4540-aa87-040a6b2d291c
+s
+java:S1874º"/Remove this use of "setLore"; it is deprecated.(¥œ¶“8Ÿ†ıâ1J$96e816f8-e071-4c90-92e8-98fde26649d7
+–
+java:S6204È"RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(ª™¨¹8“ĞÍûâ1J$5d18614e-aea5-4132-833d-c564b919236d
+x
+java:S1874Å"/Remove this use of "getLore"; it is deprecated.(»ù€¯øÿÿÿÿ8 †ıâ1J$4c4fa0f1-2e63-4a0d-81b7-a3ee2b6348f0
+x
+java:S1874Ê"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¡†ıâ1J$144c07c4-89fa-4f25-9611-ed73d1a14839
+x
+java:S1874Õ"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¡†ıâ1J$0b391e22-2e0e-408e-a4da-a317ade15a64
+s
+java:S1874á"/Remove this use of "setLore"; it is deprecated.(¥œ¶“8¢†ıâ1J$befb5ca1-b899-48e3-8c9c-6f58a6cee5a9
+x
+java:S1874í"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¢†ıâ1J$c4abcd4d-77bb-4e85-81c7-885b5ff74170
+s
+java:S1874ù"/Remove this use of "getLore"; it is deprecated.(¸©Á¡8£†ıâ1J$c3e3c51f-38f6-426c-af01-04e58feab441
+x
+java:S1874ÿ"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¤†ıâ1J$b1b8db72-4fe5-4c23-afe0-793d9a3f5b83
+s
+java:S1874‹"/Remove this use of "getLore"; it is deprecated.(¸©Á¡8¤†ıâ1J$c9fe9543-fd2a-4889-a884-92f1a0a45102
+x
+java:S1874‘"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¥†ıâ1J$2c779536-22db-4a0c-b8f8-7e47de1b1586
+x
+java:S1874"/Remove this use of "getLore"; it is deprecated.(É™’ùÿÿÿÿ8¥†ıâ1J$beb61025-c1e7-4907-8616-5a6e0a6691f3
+x
+java:S1874Ÿ"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8¦†ıâ1J$b7f342a7-bd02-49f5-936c-a756e7116232
+x
+java:S1874§"/Remove this use of "getLore"; it is deprecated.(É™’ùÿÿÿÿ8¦†ıâ1J$522f818f-890c-41ec-9348-f5b3f83e7626
+x
+java:S1874©"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8§†ıâ1J$a0ef024f-db51-4a76-9b19-43edc79c0c7c
+s
+java:S1874²"/Remove this use of "getLore"; it is deprecated.(¸©Á¡8§†ıâ1J$71a802a9-c311-4064-83e6-6513fcf5b0d9
+x
+java:S1874¶"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8§†ıâ1J$5d4c7287-ec3e-4ada-a2dc-21f2c45d32ab
+x
+java:S1874À"5Remove this use of "setDurability"; it is deprecated.(Ñ&8œĞÍûâ1J$4fad9d1a-b6f3-4867-b8a9-10225c4aa949
+u
+java:S1874À"2Remove this use of "getDyeData"; it is deprecated.(Ñ&8¨†ıâ1J$d81eeb67-d25e-422e-ae16-f58a91d9f37c
+Œ
+java:S6355Æ"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš8ĞÍûâ1J$23db7b27-9a40-4eec-9f78-b3cf5546fbda
+y
+java:S1133È"5Do not forget to remove this deprecated code someday.(¼Æó8ĞÍûâ1J$c5e09df1-afdd-4777-b6d2-facd9b35eec4
+l
+java:S1123È"(Add the missing @deprecated Javadoc tag.(¼Æó8ĞÍûâ1J$1e58cf0b-71b6-4604-a909-740e2971fb4b
+q	java:S108Ü")Either remove or fill this block of code.(î»ˆŸøÿÿÿÿ8ŸĞÍûâ1J$759f44d7-f183-48b6-91a5-99733c7f1bf7
+p
+java:S3011î",This accessibility update should be removed.(ªÇµ”8¢ĞÍûâ1J$5348f664-48f3-41c9-9e62-f4b11708baf8
+u
+java:S3011ï",This accessibility bypass should be removed.(ñ¡ˆÓşÿÿÿÿ8¢ĞÍûâ1J$656fc80f-9ff3-4849-899f-d88fea76d88c
+s
+java:S1874€"/Remove this use of "getLore"; it is deprecated.(¸©Á¡8®†ıâ1J$73f1831a-363a-49c9-8a73-1729005acfc7
+x
+java:S1874‚"/Remove this use of "setLore"; it is deprecated.(ËîÜÓùÿÿÿÿ8®†ıâ1J$37dd8dc4-3c00-4f44-84d1-7a814dfd53c5
