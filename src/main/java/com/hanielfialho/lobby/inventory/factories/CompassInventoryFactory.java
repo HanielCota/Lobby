@@ -31,7 +31,21 @@ public class CompassInventoryFactory {
                 )
                 .build();
 
+        ItemStack buildItem = new ItemBuilder(Material.CRAFTING_TABLE)
+                .setName("§eBuild Games")
+                .setLore("§7Jogue BuildGames", "§7Construa as mais belas artes.", "",
+                        "§7Com outros " + PlaceholderAPI.setPlaceholders(player, "%bungee_buildbattle% jogadores."))
+                .build();
+
+        ItemStack survivalItem = new ItemBuilder(Material.STONE_SWORD)
+                .setName("§eSurvival")
+                .setLore("§7Jogue Survival", "§7O survival como todos gostam.", "",
+                        "§7Com outros " + PlaceholderAPI.setPlaceholders(player, "%bungee_survival% jogadores."))
+                .build();
+
+        compassInventory.setItemStack(15, buildItem);
         compassInventory.setItemStack(40, lobbyItem);
+        compassInventory.setItemStack(22, survivalItem);
 
         BukkitRunnable animation = new BukkitRunnable() {
             @Override
@@ -39,16 +53,16 @@ public class CompassInventoryFactory {
                 ItemStack updatedBedWarsItem = createBedWarsItem(player);
                 ItemStack updateFactionsItem = createFactionsItem(player);
 
-                compassInventory.setItemStack(21, updatedBedWarsItem);
-                compassInventory.setItemStack(23, updateFactionsItem);
+                compassInventory.setItemStack(11, updatedBedWarsItem);
+                compassInventory.setItemStack(13, updateFactionsItem);
             }
         };
         animation.runTaskTimer(LobbyPlugin.getInstance(), 20L, 20L);
         iconAnimations.put(player, animation);
 
         // Initial setup for bedWarsItem and factionsItem
-        compassInventory.setItemStack(21, createBedWarsItem(player));
-        compassInventory.setItemStack(23, createFactionsItem(player));
+        compassInventory.setItemStack(11, createBedWarsItem(player));
+        compassInventory.setItemStack(13, createFactionsItem(player));
 
         return compassInventory;
     }
@@ -74,7 +88,7 @@ public class CompassInventoryFactory {
 
         ItemStack factionsItem = new ItemBuilder(facMaterial)
                 .setName("§aFactions Legacy")
-                .setLore("§7Jogue Factions Legacy", "§7Entre na aventura das facções", "",
+                .setLore("§7Jogue Factions Legacy", "§7Entre na aventura das facções", "§cChegando no dia 30/04...", "",
                         "§7Com outros " + PlaceholderAPI.setPlaceholders(player, "%bungee_factions% jogadores."))
                 .build();
 

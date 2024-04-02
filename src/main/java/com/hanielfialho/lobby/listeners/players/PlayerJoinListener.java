@@ -18,6 +18,7 @@ public class PlayerJoinListener implements Listener {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
 
+        player.teleportAsync(player.getWorld().getSpawnLocation());
         handlePlayerEntry(player);
     }
 

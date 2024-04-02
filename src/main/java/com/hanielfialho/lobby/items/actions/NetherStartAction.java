@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class NetherStartAction implements ItemAction {
     @Override
     public void execute(Player player) {
-        LobbyInventory lobbyInventory = new LobbyInventoryFactory().createLobbyInventory();
+        LobbyInventory lobbyInventory = new LobbyInventoryFactory().createLobbyInventory(player);
 
         lobbyInventory.open(player);
     }

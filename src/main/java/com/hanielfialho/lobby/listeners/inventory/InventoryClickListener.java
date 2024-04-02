@@ -63,21 +63,47 @@ public class InventoryClickListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
-        if (humanEntity instanceof Player player) {
-            ItemStack clickedItem = event.getCurrentItem();
+        if (!(humanEntity instanceof Player player)) {
+            return;
+        }
 
-            if (clickedItem != null && clickedItem.getType() == Material.TNT) {
-                LobbyPlugin.sendPlayerToServer(player, "factions");
-                event.setCancelled(true);
-                return;
-            }
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem == null) {
+            return;
+        }
 
-            if (clickedItem != null && clickedItem.getType() == Material.RED_BED) {
-                LobbyPlugin.sendPlayerToServer(player, "bedwars");
-                event.setCancelled(true);
-            }
+        Material itemType = clickedItem.getType();
+        String serverName = getServerForItem(itemType);
+
+        if (serverName != null) {
+            LobbyPlugin.sendPlayerToServer(player, serverName);
+            event.setCancelled(true);
         }
     }
+
+    private String getServerForItem(Material itemType) {
+        return switch (itemType) {
+            case RED_BED, BLUE_BED, BLACK_BED, YELLOW_BED, PINK_BED -> "bedwars";
+            case TNT, TNT_MINECART, CREEPER_SPAWN_EGG -> "factions";
+            case NETHER_STAR -> "lobby";
+            case CRAFTING_TABLE -> "buildbattle";
+            case STONE_SWORD -> "survival";
+            default -> null;
+        };
+    }
+
+
+    @EventHandler
+    public void onInventoryClickLobby(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getCurrentItem() == null) return;
+
+        if (event.getCurrentItem().getType() == Material.GREEN_DYE) {
+            LobbyPlugin.sendPlayerToServer(player, "lobby");
+            event.setCancelled(true);
+        }
+    }
+
 
     private boolean isPlayerHeadWithDisplayName(ItemStack itemStack) {
         return itemStack.getType() == Material.PLAYER_HEAD && hasDisplayName(itemStack);
