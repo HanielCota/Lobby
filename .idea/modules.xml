@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lobby.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Lobby.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lobby.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Lobby.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.hanielfialho.Lobby.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.hanielfialho.Lobby.test.iml" />
     </modules>
   </component>
 </project>

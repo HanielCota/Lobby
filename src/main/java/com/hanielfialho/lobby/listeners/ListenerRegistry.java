@@ -1,7 +1,6 @@
 package com.hanielfialho.lobby.listeners;
 
 import com.hanielfialho.lobby.LobbyPlugin;
-import com.hanielfialho.lobby.external.inventory.FastInv;
 import com.hanielfialho.lobby.external.inventory.FastInvManager;
 import com.hanielfialho.lobby.listeners.inventory.InventoryClickListener;
 import com.hanielfialho.lobby.listeners.players.*;

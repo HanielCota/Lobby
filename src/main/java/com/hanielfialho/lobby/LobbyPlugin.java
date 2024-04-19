@@ -53,7 +53,6 @@ public final class LobbyPlugin extends JavaPlugin {
         } catch (Exception var4) {
             player.sendMessage(ChatColor.RED + "Error when trying to connect to " + server);
         }
-
     }
 
     @Override
@@ -135,6 +134,8 @@ public final class LobbyPlugin extends JavaPlugin {
         commandManager.registerCommand(new DiscordCommand(discordDatabaseManager));
         commandManager.registerCommand(new CountryCommand(countryDatabaseManager));
         commandManager.registerCommand(new WebCommand());
+        commandManager.registerCommand(new CompassInventoryCommand());
+        commandManager.registerCommand(new EmbaixadoresCommand());
     }
 
     private void createTables() {

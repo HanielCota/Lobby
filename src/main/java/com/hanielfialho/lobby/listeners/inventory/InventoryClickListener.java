@@ -4,7 +4,10 @@ import com.hanielfialho.lobby.LobbyPlugin;
 import com.hanielfialho.lobby.inventory.ProfileInventory;
 import com.hanielfialho.lobby.inventory.factories.ProfileFactory;
 import com.hanielfialho.lobby.items.ItemAction;
-import com.hanielfialho.lobby.items.actions.*;
+import com.hanielfialho.lobby.items.actions.CompassAction;
+import com.hanielfialho.lobby.items.actions.DyeAction;
+import com.hanielfialho.lobby.items.actions.NetherStartAction;
+import com.hanielfialho.lobby.items.actions.PlayerHeadAction;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -13,12 +16,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryClickListener implements Listener {
+
     private final Map<Material, ItemAction> itemActions = new HashMap<>();
 
     public InventoryClickListener() {
@@ -28,7 +33,7 @@ public class InventoryClickListener implements Listener {
     private void initializeItemActions() {
         itemActions.put(Material.COMPASS, new CompassAction());
         itemActions.put(Material.PLAYER_HEAD, new PlayerHeadAction());
-        itemActions.put(Material.PUFFERFISH, new FishAction());
+        //itemActions.put(Material.PUFFERFISH, new FishAction());
         itemActions.put(Material.RED_DYE, new DyeAction());
         itemActions.put(Material.GREEN_DYE, new DyeAction());
         itemActions.put(Material.NETHER_STAR, new NetherStartAction());
@@ -67,17 +72,20 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem == null) {
-            return;
-        }
+        Inventory inventory = event.getClickedInventory();
+        if (inventory != null && inventory.getViewers().get(0).getOpenInventory().getTitle().equalsIgnoreCase("Escolha um jogo")) {
+            ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem == null) {
+                return;
+            }
 
-        Material itemType = clickedItem.getType();
-        String serverName = getServerForItem(itemType);
+            Material itemType = clickedItem.getType();
+            String serverName = getServerForItem(itemType);
 
-        if (serverName != null) {
-            LobbyPlugin.sendPlayerToServer(player, serverName);
-            event.setCancelled(true);
+            if (serverName != null) {
+                LobbyPlugin.sendPlayerToServer(player, serverName);
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -91,7 +99,6 @@ public class InventoryClickListener implements Listener {
             default -> null;
         };
     }
-
 
     @EventHandler
     public void onInventoryClickLobby(InventoryClickEvent event) {

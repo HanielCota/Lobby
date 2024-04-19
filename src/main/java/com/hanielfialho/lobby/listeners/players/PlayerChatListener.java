@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerChatListener implements Listener {
+
     private final Map<Player, Instant> chatCooldowns = new HashMap<>();
 
     @EventHandler
@@ -20,29 +21,38 @@ public class PlayerChatListener implements Listener {
 
         if (hasCooldown(player)) {
             long remainingTime = getRemainingCooldownTime(player);
-            player.chat("§cVocê está em cooldown no chat. Por favor, aguarde por " + remainingTime + " segundos.");
+            player.sendMessage("§cVocê está em cooldown no chat. Por favor, aguarde por " + remainingTime + " segundos.");
             event.setCancelled(true);
             return;
         }
 
+        // Obtem a mensagem formatada para o cabeçalho do chat.
         String formattedMessage = formatMessage(player);
         chatCooldowns.put(player, Instant.now());
-        event.setFormat(formattedMessage + event.getMessage());
+
+        // Garante que o formato da mensagem de chat é seguro e não causará uma exceção.
+        String safeFormattedMessage = formattedMessage.replace("%", "%%");
+
+        // Define o formato da mensagem de chat, garantindo compatibilidade com placeholders e o formato esperado pelo setFormat.
+        event.setFormat(safeFormattedMessage + "%2$s");
     }
 
     private String formatMessage(Player player) {
-        String formattedMessage = PlaceholderAPI.setPlaceholders(player, "§c§lLOBBY ▶ §r%luckperms_prefix% " + player.getName() + ": ");
+        // Usa o PlaceholderAPI para substituir placeholders na string de formato.
+        String formattedMessage = PlaceholderAPI.setPlaceholders(player, "§c§lBEDWARS ▶ §r%luckperms_prefix% " + player.getName() + ": ");
+
+        // Traduz códigos de cor alternativos usando ChatColor.
         return ChatColor.translateAlternateColorCodes('&', formattedMessage);
     }
 
     private boolean hasCooldown(Player player) {
         Instant lastTime = chatCooldowns.get(player);
-        return lastTime != null && getElapsedTime(lastTime) < 5000L;
+        return lastTime != null && getElapsedTime(lastTime) < 5000L; // Cooldown de 5 segundos
     }
 
     private long getRemainingCooldownTime(Player player) {
         long elapsedTime = getElapsedTime(chatCooldowns.get(player));
-        return Math.max(0L, (5000L - elapsedTime) / 1000L);
+        return Math.max(0L, (5000L - elapsedTime) / 1000L); // Converte milissegundos em segundos
     }
 
     private long getElapsedTime(Instant lastTime) {

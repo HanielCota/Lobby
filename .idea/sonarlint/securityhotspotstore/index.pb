@@ -210,3 +210,7 @@ m
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+z
+Jsrc/main/java/com/hanielfialho/lobby/commands/CompassInventoryCommand.java,7\6\76ed9807b9effa8253be9ae5e99a5251711c81d3
+v
+Fsrc/main/java/com/hanielfialho/lobby/commands/EmbaixadoresCommand.java,1\8\18a80e1b59113c85c942989e2f4ac2dd063ec580

@@ -9,8 +9,8 @@
     <facet type="minecraft" name="Minecraft">
       <configuration>
         <autoDetectTypes>
-          <platformType>PAPER</platformType>
           <platformType>MCP</platformType>
+          <platformType>PAPER</platformType>
           <platformType>ADVENTURE</platformType>
         </autoDetectTypes>
         <projectReimportVersion>1</projectReimportVersion>
@@ -19,8 +19,5 @@
   </component>
   <component name="McpModuleSettings">
     <option name="srgType" value="SRG" />
-  </component>
-  <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="3d2b6de1-0d2c-4dbc-8377-ed697439b5d9" />
   </component>
 </module>
